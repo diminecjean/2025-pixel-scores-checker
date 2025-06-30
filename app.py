@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+import pandas as pd
 
 # Load your JSON data
 @st.cache_data
@@ -24,15 +25,41 @@ def render_record(record):
     st.markdown("### 📝 Comments")
     st.markdown(record['comments'])
 
-    st.markdown("### 📊 Evaluation Scores")
-    score_fields = [
-        'content_clarity', 'impact_benefit', 'innovation_creativity',
-        'innovativeness', 'practicality', 'presentation',
-        'problem_statement', 'solution', 'entrepreneurship'
-    ]
 
-    for field in score_fields:
-        st.markdown(f"- **{field.replace('_', ' ').title()}**: {record.get(field)}")
+
+    st.markdown("### 📊 Evaluation Scores")
+    total_score = record.get('content_clarity') + record.get('impact_benefit') + record.get('innovation_creativity') + record.get('innovativeness') + record.get('practicality') + record.get('presentation') + record.get('problem_statement') + record.get('solution') + record.get('entrepreneurship')
+    # Display scores in a table
+    score_data = {
+        "Criteria": [
+            "Content Clarity (10%)",
+            "Impact & Benefit (10%)", 
+            "Innovation Creativity (5%)", 
+            "Innovativeness (10%)", 
+            "Practicality (5%)", 
+            "Presentation (5%)", 
+            "Problem Statement (10%)", 
+            "Solution (35%)", 
+            "Entrepreneurship (10%)",
+            "Total Score (100%)"
+        ],
+        "Score": [
+            f"{record.get('content_clarity')}",
+            f"{record.get('impact_benefit')}",
+            f"{record.get('innovation_creativity')}",
+            f"{record.get('innovativeness')}",
+            f"{record.get('practicality')}",
+            f"{record.get('presentation')}",
+            f"{record.get('problem_statement')}",
+            f"{record.get('solution')}",
+            f"{record.get('entrepreneurship')}",
+            f"{total_score if total_score else 'N/A'}"
+        ]
+    }
+    
+    # Create and display the table
+    score_df = pd.DataFrame(score_data)
+    st.table(score_df)
 
     st.markdown("---")
 
